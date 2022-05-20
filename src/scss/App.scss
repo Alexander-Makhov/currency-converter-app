@@ -1,0 +1,146 @@
+@import "./variable/variable.scss";
+
+@function stripUnit( $value ) {
+    @return $value / ( $value * 0 + 1 );
+}
+
+@function toRem( $pxValue ) {
+    @return #{ stripUnit( $pxValue ) / stripUnit( $base-font-size )}rem;
+}
+
+@function toEm($pixels, $context: $base-font-size) {
+  @if (unitless($pixels)) {
+    $pixels: $pixels * 1px;
+  }
+
+  @if (unitless($context)) {
+    $context: $context * 1px;
+  }
+
+  @return $pixels / $context * 1em;
+}
+
+@mixin container( $padding, $padding_value, $width ) {
+  margin: 0 auto 1.5rem;
+  #{ $padding }: #{ $padding_value };
+  width: #{ $width };
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.container{
+  @include container( padding, toEm( 0 ) toEm( 15px ), toEm( 1400px ));
+
+  @media all and (max-width: toEm(1420px)) {
+      @include container( padding, toEm( 0 ) toEm( 15px ), toEm( 1360px ));
+  }
+
+  @media all and (max-width: toEm(1360px)) {
+      @include container( padding, toEm( 0 ) toEm( 15px ), toEm( 1200px ));
+  }
+
+  @media all and (max-width: toEm(1260px)) {
+      @include container( padding, toEm( 0 ) toEm( 15px ), toEm( 1179px ));
+  }
+
+  @media all and (max-width: toEm(1199px)) {
+      @include container( padding, toEm( 0 ) toEm( 15px ), toEm( 991px ));
+  }
+
+  @media all and (max-width: toEm(1024px)) {
+      @include container( padding, toEm( 0 ) toEm( 15px ), toEm( 860px ));
+  }
+
+  @media all and (max-width: 860px) {
+      @include container( padding, toEm( 0 ) toEm( 15px ), 100%);
+  }
+}
+
+.container-fluid{
+  @include container( padding, toRem( 0 ) toRem( 15px ), 100% );
+}
+
+.header-background {
+  height: toRem(800px);
+  width: 100%;
+  display: flex;
+  position: fixed;
+  background-size: cover;
+  position: relative;  
+  &:after {
+    content: '';
+    height: 100%;
+    width: 100%;
+    display: block;
+    background: rgb(0,0,0);
+    background: linear-gradient(180deg, rgb(0, 0, 0, .50) 30%, rgba(0, 0, 0, 25) 100%);
+    background-size: cover;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+  }
+  &:before {
+    content: '';
+    height: 100%;
+    width: 100%;
+    display: block;
+    background-color: rgba(0, 0, 0, .50);
+    background: linear-gradient(rgba(10,10,10,.5) 15%,rgba(0,0,0,0)), repeating-linear-gradient(0, transparent, transparent 2px, black 6px, black 3px);
+    background-size: cover;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 2;
+  }
+}
+
+.header-container {
+  margin: 0 auto;
+  height: auto;
+  width: 100%;
+  display: flex;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  color: rgb(121, 151, 11);
+  h1 {    
+    text-transform: uppercase;
+    strong {
+      font-size: toRem(60px);
+      line-height: 0;
+    }
+  }
+}
+
+.currency-exchange {  
+  width: 100%;
+  display: flex;
+  align-items: center;
+  .form-exchange {
+    margin: toRem(15px) 0 0 toRem(30px);
+    display: flex;
+    .label {
+      margin: 0 toRem(30px) 0 0;
+      display: flex;
+      flex-direction: column;
+      .label-item {
+        margin: 0 0 toRem(2px);
+        width: auto;
+        display: inline-block;
+        font-weight: 700;
+      }
+      .input-item {
+        display: block;
+      }
+      &:last-child {
+        margin: 0 0 0 toRem(30px);
+        .label-item {
+          margin: 0 0 toRem(2px);
+        }
+      }
+    }
+  }
+}
