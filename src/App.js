@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import RateExChange from "./component/RateExChange.js";
-
 import hector from "./images/hector-j-rivas-1FxMET2U5dU-unsplash.jpg";
-
 import './scss/App.scss';
 
 const background_image_style = {
@@ -43,9 +41,13 @@ const App = props => {
                     </div>
                 </div>
             </header>
-            <div className="content"></div>
+            {/* <div className="content">
+
+            </div> */}
         </main>
-        <footer className="footer"></footer>
+        {/* <footer className="footer">
+
+        </footer> */}
         </div>
     );
 }

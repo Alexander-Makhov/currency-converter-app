@@ -120,20 +120,25 @@
   display: flex;
   align-items: center;
   .form-exchange {
-    margin: toRem(15px) 0 0 toRem(30px);
+    margin: toRem(15px) 0 0 0;
     display: flex;
     .label {
-      margin: 0 toRem(30px) 0 0;
+      margin: toEm(-15px) toRem(30px) 0 0;
       display: flex;
       flex-direction: column;
       .label-item {
-        margin: 0 0 toRem(2px);
+        margin: 0 0 toRem(15px);
         width: auto;
         display: inline-block;
         font-weight: 700;
       }
-      .input-item {
+      select, .input-item {
+        height: toRem(30px);
         display: block;
+      }
+      select {
+        height: toRem(38px);
+        cursor: pointer;
       }
       &:last-child {
         margin: 0 0 0 toRem(30px);
@@ -143,4 +148,61 @@
       }
     }
   }
+}
+
+.currency-exchange .form-exchange .label.result {
+    margin: toRem(0) toRem(30px) 0 0;
+    .label-item {
+        margin: toRem(-15px) 0 0;
+    }
+}
+.currency-result {
+    margin: 0;
+    padding: 0 0 0 toEm(75px);
+    height: toRem(65px);
+    display: flex;
+    align-items: center;
+    position: relative;
+    figcaption {
+        margin: 0 toRem(15px) 0 0;
+        display: inline-block;
+        font-weight: 700;
+        color: #fff;
+    }
+    img {
+        height: 100%;
+        width: toRem(60px);
+        display: block;
+        object-fit: contain;
+        position: absolute;
+        left: 0; top: 50%;
+        transform: translateY(-50%);
+    }
+}
+.label.btn {
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+.btn-select-revers {
+    height: 40px;
+    width: 40px;
+    display: inline-block;
+    border-radius: 50px;
+    cursor: pointer;
+    position: relative;
+    &::before {
+        content: "";
+        height: 100%;
+        width: 100%;
+        display: inline-block;
+        background-color: transparent;
+        position: absolute;
+        left: 0; top: 0;
+        z-index: 2;
+    }
+    svg {
+        height: 100%;
+        width: 100%;
+    }
 }

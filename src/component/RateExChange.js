@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import usd_img from "./../images/one-usd.png";
+import uah_img from "./../images/one-uah.png";
+import eur_img from "./../images/one-euro.png";
+
+const imagesRate = {
+    usd: usd_img,
+    uah: uah_img,
+    eur: eur_img,
+};
 
 const RateExChange = props => {
     const 
         currencySupportUrl = props.currencyAPI.currency_support,
-        currencyRestUrlPath = props.currencyAPI.currency_rest;
+        currencyRestUrlPath = props.currencyAPI.currency_rest,    
     
-    const 
         [currencyDisplayName, updateCurrencyDisplayName] = useState(null),
         fetchCurrencyDisplayName = async url => {
             const response = await fetch(url);        
@@ -20,13 +28,8 @@ const RateExChange = props => {
                     updateCurrencyDisplayName(temp_data);        
                     temp_data = null;
                 }
-        }
-        
-        useEffect(() => {
-            fetchCurrencyDisplayName(currencySupportUrl);
-        }, []);
+        },
 
-    const 
         [quantityRateValue, updateQuantityRateValue] = useState(1),
         [currenciesRestData, updateCurrenciesRestData] = useState(null),
         fetchCurrenciesRestData = async (path, from, to) => {                
@@ -41,30 +44,32 @@ const RateExChange = props => {
                             updateCurrenciesRestData(data[to]);
                     }
             } 
-        }
+        },
 
-    const 
         [selectToIsDisabled, updateSelectToIsDisabled] = useState(true),
         [selectFromValue, updateSelectFromValue] = useState(null),
+        refSelectFrom = React.createRef(),
         handleSelectFrom = event => {
             const 
                 target = event.target,
                 fromValue = target.value;        
                 updateSelectToIsDisabled(false);
                 updateSelectFromValue(fromValue);
-                fetchCurrenciesRestData(currencyRestUrlPath, fromValue, selectToValue);        
-        }
+                fetchCurrenciesRestData(currencyRestUrlPath, fromValue, selectToValue);                                        
+        },
 
-    const 
         [quantityIsDisabled, updateQuantityIsDisabled] = useState(true),
+        [btnDisabled, updateBtnDisabled] = useState(true),
         [selectToValue, updateSelectToValue] = useState(null),
+        refSelectTo = React.createRef(),
         handleSelectTo = event => {
             const 
                 target = event.target,
                 toValue = target.value;        
                 updateQuantityIsDisabled(false);
                 updateSelectToValue(toValue);
-                fetchCurrenciesRestData(currencyRestUrlPath, selectFromValue, toValue);             
+                updateBtnDisabled(false);
+                fetchCurrenciesRestData(currencyRestUrlPath, selectFromValue, toValue);                
         },
         
         handleQuantity = event => {
@@ -72,38 +77,51 @@ const RateExChange = props => {
                 target = event.target,
                 quantityValue = Number(target.value);
                 quantityValue <= 0 ? updateQuantityRateValue(1) : updateQuantityRateValue(quantityValue);
-        }
+        },
+        
+        handleSelectRevers = event => {
+            updateSelectFromValue(refSelectFrom.current.value = selectToValue);
+            updateSelectToValue(refSelectTo.current.value = selectFromValue);
+            fetchCurrenciesRestData(currencyRestUrlPath, selectFromValue, selectToValue);
+        },
+        defaultOptionText = "Choose a currency...";
+
+        useEffect(() => {
+            fetchCurrencyDisplayName(currencySupportUrl);
+        }, []);
 
     return (        
         <div className="currency-exchange">
             <div className="form-exchange">
                 <label className="label">
                     <span className='label-item'>Select from</span>
-                    <select name="select-from" defaultValue={"default"} onChange={handleSelectFrom}>
-                        <option value="default" disabled>Choose a currency...</option>
+                    <select name="select-from" defaultValue={"default"} onChange={handleSelectFrom} ref={refSelectFrom}>
+                        <option value="default" disabled>{defaultOptionText}</option>
                         {!!currencyDisplayName ? Object.keys(currencyDisplayName).map((name, index) => {
-                            if (selectToValue !== name) {
-                                return (
-                                    <option key={index} value={name}>
-                                        {name.toUpperCase()}
-                                    </option>
-                                )
-                            }                            
+                            return (
+                                <option key={index} value={name}>
+                                    {name.toUpperCase()}
+                                </option>
+                            )         
                         }) : ''}
                     </select>
                 </label>
+                <label className="label btn">
+                <span className='label-item'>Revers</span>
+                    <button className="btn-select-revers" onClick={handleSelectRevers} disabled={btnDisabled}>
+                        <svg fill="#000000" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 26 26" width="26px" height="26px"><path d="M 12 0 L 12 2.25 C 6.503906 2.761719 2.1875 7.371094 2.1875 13 C 2.1875 15.933594 3.351563 18.582031 5.25 20.53125 L 7.96875 18.09375 C 6.660156 16.792969 5.84375 14.988281 5.84375 13 C 5.84375 9.390625 8.523438 6.398438 12 5.90625 L 12 8 L 18.40625 4 Z M 20.75 5.46875 L 18.0625 7.90625 C 19.371094 9.207031 20.15625 11.015625 20.15625 13 C 20.15625 16.613281 17.480469 19.574219 14 20.0625 L 14 18 L 7.59375 22 L 14 26 L 14 23.75 C 19.496094 23.238281 23.8125 18.628906 23.8125 13 C 23.8125 10.066406 22.648438 7.417969 20.75 5.46875 Z"/></svg>
+                    </button>
+                </label>
                 <label className="label">
                     <span className='label-item'>Select to</span>
-                    <select name="select-to" defaultValue={"default"} disabled={selectToIsDisabled} onChange={handleSelectTo}>
-                        <option value="default" disabled>Choose a currency...</option>
+                    <select name="select-to" defaultValue={"default"} disabled={selectToIsDisabled} onChange={handleSelectTo} ref={refSelectTo}>
+                        <option value="default" disabled>{defaultOptionText}</option>                        
                         {!!currencyDisplayName ? Object.keys(currencyDisplayName).map((name, index) => {
-                            if (selectFromValue !== name) {
-                                return (
-                                    <option key={index} value={name}>
-                                        {name.toUpperCase()}
-                                    </option>
-                                )
-                            }            
+                            return (
+                                <option key={index} value={name}>
+                                    {name.toUpperCase()}
+                                </option>
+                            )
                         }) : ''}
                     </select>
                 </label>
@@ -111,16 +129,28 @@ const RateExChange = props => {
                     <span className='label-item'>Quantity</span>
                     <input className="input-item" name="currencies-quantity" type="number" value={quantityRateValue} disabled={quantityIsDisabled} onChange={handleQuantity} />
                 </label>
-                <label className="label">
+                <label className="label result">
                     <span className="label-item">Exchange Rate</span>
-                    {!!currenciesRestData ? 
-                        new Intl.NumberFormat(
-                            "en-US", {
-                            style: "currency", 
-                            currency: selectToValue, 
-                            currencyDisplay: "name"
-                        }).format(quantityRateValue * Number(currenciesRestData)) 
-                    : quantityRateValue}
+                    <figure className="currency-result">                        
+                        {!!currencyDisplayName ? Object.keys(currencyDisplayName).map((name, index) => {
+                            if (selectToValue === name) {
+                                return (
+                                    <img key={index} src={imagesRate[name]} />
+                                )
+                            }
+                        }) : ''}
+                        
+                        <figcaption>
+                            {!!currenciesRestData ? 
+                                new Intl.NumberFormat(
+                                    "en-US", {
+                                    style: "currency", 
+                                    currency: selectToValue, 
+                                    currencyDisplay: "name"
+                                }).format(quantityRateValue * Number(currenciesRestData)).split(" ")[0]
+                            : quantityRateValue}
+                        </figcaption>
+                    </figure>
                 </label>
             </div>
         </div>
