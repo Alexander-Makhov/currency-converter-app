@@ -55,7 +55,8 @@ const
             fromValue = target.value;        
             updateSelectToIsDisabled(false);
             updateSelectFromValue(fromValue);
-            fetchCurrenciesRestData(currencyRestUrlPath, fromValue, selectToValue);                                        
+            fetchCurrenciesRestData(currencyRestUrlPath, fromValue, selectToValue);              
+            // console.log(fromValue, selectToValue);                          
     },
 
     [quantityIsDisabled, updateQuantityIsDisabled] = useState(true),
@@ -69,7 +70,8 @@ const
             updateQuantityIsDisabled(false);
             updateSelectToValue(toValue);
             updateBtnDisabled(false);
-            fetchCurrenciesRestData(currencyRestUrlPath, selectFromValue, toValue);                
+            fetchCurrenciesRestData(currencyRestUrlPath, selectFromValue, toValue);           
+            // console.log(selectFromValue, toValue);
     },
     
     handleQuantity = event => {
@@ -87,8 +89,11 @@ const
     
     defaultOptionText = "Choose a currency...";
 
+    console.log(currenciesRestData, selectFromValue, selectToValue);
+
     useEffect(() => {
         fetchCurrencyDisplayName(currencySupportUrl);
+        fetchCurrenciesRestData(currencyRestUrlPath, selectFromValue, selectToValue);
     }, []);
 
     return (        
