@@ -16,7 +16,7 @@ const
 
     [currencyDisplayName, updateCurrencyDisplayName] = useState(null),
     fetchCurrencyDisplayName = async url => {
-        const response = await fetch(url);        
+        const response = await fetch(url);         
         let temp_data = {};
             if (response.ok) {
                 const data = await response.json();
@@ -36,8 +36,7 @@ const
         if (from !== null &&  to !== null) {
             const 
                 url = `${path}${from}/${to}.json`,
-                response = await fetch(url);
-                
+                response = await fetch(url);                
                 if (response.ok) {
                     const 
                         data = await response.json();
@@ -51,12 +50,10 @@ const
     refSelectFrom = React.createRef(),
     handleSelectFrom = event => {
         const 
-            target = event.target,
-            fromValue = target.value;        
+            fromValue = event.target.value;        
             updateSelectToIsDisabled(false);
             updateSelectFromValue(fromValue);
-            fetchCurrenciesRestData(currencyRestUrlPath, fromValue, selectToValue);              
-            // console.log(fromValue, selectToValue);                          
+            fetchCurrenciesRestData(currencyRestUrlPath, fromValue, selectToValue);                              
     },
 
     [quantityIsDisabled, updateQuantityIsDisabled] = useState(true),
@@ -65,36 +62,27 @@ const
     refSelectTo = React.createRef(),
     handleSelectTo = event => {
         const 
-            target = event.target,
-            toValue = target.value;        
+            toValue = event.target.value;        
             updateQuantityIsDisabled(false);
             updateSelectToValue(toValue);
             updateBtnDisabled(false);
             fetchCurrenciesRestData(currencyRestUrlPath, selectFromValue, toValue);           
-            // console.log(selectFromValue, toValue);
     },
     
     handleQuantity = event => {
         const 
-            target = event.target,
-            quantityValue = Number(target.value);
+            quantityValue = Number(event.target.value);
             quantityValue <= 0 ? updateQuantityRateValue(1) : updateQuantityRateValue(quantityValue);
     },
     
-    handleSelectRevers = event => {
+    handleSelectRevers = event => {                
         updateSelectFromValue(refSelectFrom.current.value = selectToValue);
         updateSelectToValue(refSelectTo.current.value = selectFromValue);
-        fetchCurrenciesRestData(currencyRestUrlPath, selectFromValue, selectToValue);
     },
     
     defaultOptionText = "Choose a currency...";
 
-    console.log(currenciesRestData, selectFromValue, selectToValue);
-
-    useEffect(() => {
-        fetchCurrencyDisplayName(currencySupportUrl);
-        fetchCurrenciesRestData(currencyRestUrlPath, selectFromValue, selectToValue);
-    }, []);
+    useEffect(() => fetchCurrencyDisplayName(currencySupportUrl), []);
 
     return (        
         <div className="currency-exchange">
@@ -139,6 +127,7 @@ const
                     <span className="label-item">Exchange Rate</span>
                     <figure className="currency-result">                        
                         {!!currencyDisplayName ? Object.keys(currencyDisplayName).map((name, index) => {
+                            fetchCurrenciesRestData(currencyRestUrlPath, selectFromValue, selectToValue);
                             if (selectToValue === name) {
                                 return (
                                     <img key={index} src={imagesRate[name]} />
@@ -153,7 +142,7 @@ const
                                     style: "currency", 
                                     currency: selectToValue, 
                                     currencyDisplay: "name"
-                                }).format(quantityRateValue * Number(currenciesRestData)).split(" ")[0]
+                                }).format(quantityRateValue * Number(currenciesRestData))
                             : quantityRateValue}
                         </figcaption>
                     </figure>
