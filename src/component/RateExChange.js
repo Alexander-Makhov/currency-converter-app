@@ -10,85 +10,86 @@ const imagesRate = {
 };
 
 const RateExChange = props => {
-    const 
-        currencySupportUrl = props.currencyAPI.currency_support,
-        currencyRestUrlPath = props.currencyAPI.currency_rest,    
-    
-        [currencyDisplayName, updateCurrencyDisplayName] = useState(null),
-        fetchCurrencyDisplayName = async url => {
-            const response = await fetch(url);        
-            let temp_data = {};
-                if (response.ok) {
-                    const data = await response.json();
-                    for (let [key, value] of Object.entries(data)) {
-                        if (key === "usd" || key === "uah" || key === "eur") {
-                            Object.assign(temp_data, {[key]: value});                
-                        }
+const 
+    currencySupportUrl = props.currencyAPI.currency_support,
+    currencyRestUrlPath = props.currencyAPI.currency_rest,    
+
+    [currencyDisplayName, updateCurrencyDisplayName] = useState(null),
+    fetchCurrencyDisplayName = async url => {
+        const response = await fetch(url);        
+        let temp_data = {};
+            if (response.ok) {
+                const data = await response.json();
+                for (let [key, value] of Object.entries(data)) {
+                    if (key === "usd" || key === "uah" || key === "eur") {
+                        Object.assign(temp_data, {[key]: value});                
                     }
-                    updateCurrencyDisplayName(temp_data);        
-                    temp_data = null;
                 }
-        },
+                updateCurrencyDisplayName(temp_data);        
+                temp_data = null;
+            }
+    },
 
-        [quantityRateValue, updateQuantityRateValue] = useState(1),
-        [currenciesRestData, updateCurrenciesRestData] = useState(null),
-        fetchCurrenciesRestData = async (path, from, to) => {                
-            if (from !== null &&  to !== null) {
-                const 
-                    url = `${path}${from}/${to}.json`,
-                    response = await fetch(url);
-                    
-                    if (response.ok) {
-                        const 
-                            data = await response.json();
-                            updateCurrenciesRestData(data[to]);
-                    }
-            } 
-        },
-
-        [selectToIsDisabled, updateSelectToIsDisabled] = useState(true),
-        [selectFromValue, updateSelectFromValue] = useState(null),
-        refSelectFrom = React.createRef(),
-        handleSelectFrom = event => {
+    [quantityRateValue, updateQuantityRateValue] = useState(1),
+    [currenciesRestData, updateCurrenciesRestData] = useState(null),
+    fetchCurrenciesRestData = async (path, from, to) => {                
+        if (from !== null &&  to !== null) {
             const 
-                target = event.target,
-                fromValue = target.value;        
-                updateSelectToIsDisabled(false);
-                updateSelectFromValue(fromValue);
-                fetchCurrenciesRestData(currencyRestUrlPath, fromValue, selectToValue);                                        
-        },
+                url = `${path}${from}/${to}.json`,
+                response = await fetch(url);
+                
+                if (response.ok) {
+                    const 
+                        data = await response.json();
+                        updateCurrenciesRestData(data[to]);
+                }
+        } 
+    },
 
-        [quantityIsDisabled, updateQuantityIsDisabled] = useState(true),
-        [btnDisabled, updateBtnDisabled] = useState(true),
-        [selectToValue, updateSelectToValue] = useState(null),
-        refSelectTo = React.createRef(),
-        handleSelectTo = event => {
-            const 
-                target = event.target,
-                toValue = target.value;        
-                updateQuantityIsDisabled(false);
-                updateSelectToValue(toValue);
-                updateBtnDisabled(false);
-                fetchCurrenciesRestData(currencyRestUrlPath, selectFromValue, toValue);                
-        },
-        
-        handleQuantity = event => {
-            const 
-                target = event.target,
-                quantityValue = Number(target.value);
-                quantityValue <= 0 ? updateQuantityRateValue(1) : updateQuantityRateValue(quantityValue);
-        },
-        
-        handleSelectRevers = event => {
-            updateSelectFromValue(refSelectFrom.current.value = selectToValue);
-            updateSelectToValue(refSelectTo.current.value = selectFromValue);
-            fetchCurrenciesRestData(currencyRestUrlPath, selectFromValue, selectToValue);
-        },
-        defaultOptionText = "Choose a currency...";
+    [selectToIsDisabled, updateSelectToIsDisabled] = useState(true),
+    [selectFromValue, updateSelectFromValue] = useState(null),
+    refSelectFrom = React.createRef(),
+    handleSelectFrom = event => {
+        const 
+            target = event.target,
+            fromValue = target.value;        
+            updateSelectToIsDisabled(false);
+            updateSelectFromValue(fromValue);
+            fetchCurrenciesRestData(currencyRestUrlPath, fromValue, selectToValue);                                        
+    },
 
-        useEffect(() => {
-            fetchCurrencyDisplayName(currencySupportUrl);
-        }, []);
+    [quantityIsDisabled, updateQuantityIsDisabled] = useState(true),
+    [btnDisabled, updateBtnDisabled] = useState(true),
+    [selectToValue, updateSelectToValue] = useState(null),
+    refSelectTo = React.createRef(),
+    handleSelectTo = event => {
+        const 
+            target = event.target,
+            toValue = target.value;        
+            updateQuantityIsDisabled(false);
+            updateSelectToValue(toValue);
+            updateBtnDisabled(false);
+            fetchCurrenciesRestData(currencyRestUrlPath, selectFromValue, toValue);                
+    },
+    
+    handleQuantity = event => {
+        const 
+            target = event.target,
+            quantityValue = Number(target.value);
+            quantityValue <= 0 ? updateQuantityRateValue(1) : updateQuantityRateValue(quantityValue);
+    },
+    
+    handleSelectRevers = event => {
+        updateSelectFromValue(refSelectFrom.current.value = selectToValue);
+        updateSelectToValue(refSelectTo.current.value = selectFromValue);
+        fetchCurrenciesRestData(currencyRestUrlPath, selectFromValue, selectToValue);
+    },
+    
+    defaultOptionText = "Choose a currency...";
+
+    useEffect(() => {
+        fetchCurrencyDisplayName(currencySupportUrl);
+    }, []);
 
     return (        
         <div className="currency-exchange">
