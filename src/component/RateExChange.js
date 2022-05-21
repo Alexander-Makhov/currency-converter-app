@@ -141,7 +141,7 @@ const
                             }
                         }) : ''}
                         
-                        <figcaption>
+                        <figcaption style={{color: "#b7b7b7"}}>
                             {!!currenciesRestData ? 
                                 new Intl.NumberFormat(
                                     "en-US", {

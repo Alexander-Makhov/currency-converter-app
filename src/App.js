@@ -10,7 +10,8 @@ const background_image_style = {
 }
 
 const App = props => {  
-    const currency_api = props.dataState.currency_api,
+const 
+    currency_api = props.dataState.currency_api,
     currency_rest = props.dataState.currency_api.currency_rest,
     [currencyDate, updateCurrencyDate] = useState(null),
     fetchCurrenciesRestData = async (path) => {                
@@ -36,7 +37,8 @@ const App = props => {
                 <div className="header-container">                        
                     <div className="container">
                         <h1>Currency Exchange Rate</h1>
-                        <p>Last update: {currencyDate}</p>
+                        <p style={{color: "#b7b7b7", fontWeight: 700}}><strong>Every day is updated for the previous day!</strong></p>                        
+                        <p>Last update: <span style={{color: "#b7b7b7"}}>{currencyDate}</span></p>
                         <RateExChange currencyAPI={currency_api} />
                     </div>
                 </div>
