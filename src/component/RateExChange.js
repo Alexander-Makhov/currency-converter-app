@@ -82,7 +82,9 @@ const
     
     defaultOptionText = "Choose a currency...";
 
-    useEffect(() => fetchCurrencyDisplayName(currencySupportUrl), []);
+    useEffect(() => {
+        fetchCurrencyDisplayName(currencySupportUrl)
+    }, []);
 
     return (        
         <div className="currency-exchange">
@@ -130,7 +132,7 @@ const
                             fetchCurrenciesRestData(currencyRestUrlPath, selectFromValue, selectToValue);
                             if (selectToValue === name) {
                                 return (
-                                    <img key={index} src={imagesRate[name]} />
+                                    <img key={index} src={window.location.origin + imagesRate[name]} />
                                 )
                             }
                         }) : ''}

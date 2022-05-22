@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import RateExChange from "./component/RateExChange.js";
-import hector from "./images/hector-j-rivas-1FxMET2U5dU-unsplash.jpg";
+import hector from "./images/joe-woods-4Zaq5xY5M_c-unsplash.jpg";
 import './scss/App.scss';
 
 const background_image_style = {
